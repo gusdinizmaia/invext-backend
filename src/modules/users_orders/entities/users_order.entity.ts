@@ -1,15 +1,17 @@
 import { randomUUID } from "node:crypto"
 import { iSectors } from "src/modules/users/entities/user.entity"
 
-export class Order {
+export class UserOrder {
     readonly id : string
-    title : string
-    description : string
-    topic : string
-  
-    clientId : string
+    start_treatment : string
+    end_treatment : string
+    vendorId : string 
+    clientId : string 
+    orderId : string
+    topic : iSectors
 
     constructor(){
         this.id = randomUUID()
     }
 }
+

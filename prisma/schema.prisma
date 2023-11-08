@@ -6,23 +6,18 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
-enum Sector {
-  A
-  B
-  C
-}
 
 model User{
   id String @id
   name String
-  email String
+  email String @unique
   password String
-  sector Sector
-  is_vendor Boolean
+  sector String @default("not vendor")
+  is_vendor Boolean @default(false)
 
   orders Order[] @relation("client_order")
   treatments UserOrder[] @relation("client")
@@ -35,7 +30,7 @@ model Order{
   id String @id
   title String
   description String
-  topic Sector
+  topic String
 
   client User @relation(name:"client_order",fields: [clientId], references: [id])
   clientId String
@@ -53,7 +48,7 @@ model UserOrder{
   clientId String 
   order Order @relation("user_order",fields: [orderId], references: [id])
   orderId String @unique
-  topic Sector
+  topic String
 
   @@id([clientId, vendorId, orderId])
   @@map("users_orders")
