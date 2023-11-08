@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sector {
+  A
+  B
+  C
+}
+
+model User{
+  id String @id
+  name String
+  email String
+  password String
+  sector Sector
+  is_vendor Boolean
+
+  orders Order[] @relation("client_order")
+  treatments UserOrder[] @relation("client")
+  treatments_completed UserOrder[] @relation("vendor")
+  
+  @@map("users")
+}
+
+model Order{
+  id String @id
+  title String
+  description String
+  topic Sector
+
+  client User @relation(name:"client_order",fields: [clientId], references: [id])
+  clientId String
+  userOrder UserOrder? @relation("user_order")
+
+  @@map("orders")
+}
+
+model UserOrder{
+  start_treatment DateTime
+  end_treatment DateTime 
+  vendor User @relation(name:"vendor",fields: [vendorId], references: [id])
+  vendorId String 
+  client User @relation(name:"client",fields: [clientId], references: [id])
+  clientId String 
+  order Order @relation("user_order",fields: [orderId], references: [id])
+  orderId String @unique
+  topic Sector
+
+  @@id([clientId, vendorId, orderId])
+  @@map("users_orders")
+}
