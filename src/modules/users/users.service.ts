@@ -11,4 +11,14 @@ export class UsersService{
     const user = await this.usersRepository.create(createUserDto)
     return user;
   }
+
+  async findByEmail(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    return user;
+  }
+
+  async findById(userId: string) {
+    const user = await this.usersRepository.findById(userId);
+    return user;
+  }
 }

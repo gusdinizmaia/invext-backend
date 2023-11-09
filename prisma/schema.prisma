@@ -6,28 +6,22 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-enum Sector {
-  A
-  B
-  C
-}
 
 model User{
   id String @id
   name String
-  email String
+  email String @unique
   password String
-  sector Sector
-  is_vendor Boolean
+  sector String @default("not attendant")
+  is_attendant Boolean @default(false)
 
-  orders Order[] @relation("client_order")
-  treatments UserOrder[] @relation("client")
-  treatments_completed UserOrder[] @relation("vendor")
-  
+  customer_services Order[] @relation(name:"customer_service")
+  attendant_services Order[] @relation(name:"attendant_service")
+
   @@map("users")
 }
 
@@ -35,26 +29,14 @@ model Order{
   id String @id
   title String
   description String
-  topic Sector
+  topic String
+  service_requested Boolean @default(false)
+  start_service DateTime
+  end_service DateTime? 
 
-  client User @relation(name:"client_order",fields: [clientId], references: [id])
-  clientId String
-  userOrder UserOrder? @relation("user_order")
-
+  customer User @relation(name:"customer_service",fields: [customerId], references: [id])
+  customerId String
+  attendant User? @relation(name:"attendant_service",fields: [attendantId], references: [id])
+  attendantId String?
   @@map("orders")
-}
-
-model UserOrder{
-  start_treatment DateTime
-  end_treatment DateTime 
-  vendor User @relation(name:"vendor",fields: [vendorId], references: [id])
-  vendorId String 
-  client User @relation(name:"client",fields: [clientId], references: [id])
-  clientId String 
-  order Order @relation("user_order",fields: [orderId], references: [id])
-  orderId String @unique
-  topic Sector
-
-  @@id([clientId, vendorId, orderId])
-  @@map("users_orders")
 }

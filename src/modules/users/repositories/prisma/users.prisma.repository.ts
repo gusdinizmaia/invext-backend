@@ -4,12 +4,40 @@ import { CreateUserDto } from '../../dto/create-user.dto';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { User } from '../../entities/user.entity';
 import { PrismaService } from 'src/database/prisma.service';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersPrismaRepository implements UsersRepository {
   constructor(private prisma: PrismaService) {}
   async create(data: CreateUserDto): Promise<User> {
+    const user = new User();
+    Object.assign(user, {
+      ...data
+    });
 
-    return
+    const newUser = await this.prisma.user.create({
+      data: { ...user}, include:{attendant_services:true, customer_services:true}
+    });
+
+    return plainToInstance(User, newUser);
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+    });
+    
+    return plainToInstance(User, user);
+  }
+
+  async findById(userId: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId }, include:{
+        attendant_services:{
+          where:{end_service:null
+          }}}
+    });
+
+    return plainToInstance(User, user);
   }
 }
