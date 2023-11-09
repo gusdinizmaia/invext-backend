@@ -1,3 +1,6 @@
+<h1 align="center">Invext backend</h1>
+<p>Infelizmente acabei tendo um problema técnico com o postgres instalado no meu computador então a aplicação para testes terá que ser rodada em sqlite</p>
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
