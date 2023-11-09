@@ -16,20 +16,26 @@ export class UsersPrismaRepository implements UsersRepository {
     });
 
     const newUser = await this.prisma.user.create({
-      data: { ...user, treatments_completed:null}
+      data: { ...user}, include:{attendant_services:true, customer_services:true}
     });
 
     return plainToInstance(User, newUser);
   }
+
   async findByEmail(email: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
       where: { email },
     });
-    return user;
+    
+    return plainToInstance(User, user);
   }
+
   async findById(userId: string): Promise<User> {
     const user = await this.prisma.user.findUnique({
-      where: { id: userId },include:{treatments_completed:true}
+      where: { id: userId }, include:{
+        attendant_services:{
+          where:{end_service:null
+          }}}
     });
 
     return plainToInstance(User, user);

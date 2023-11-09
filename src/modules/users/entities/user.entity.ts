@@ -1,6 +1,6 @@
-import { UserOrder } from "src/modules/users_orders/entities/users_order.entity";
 import { Exclude } from "class-transformer";
 import { randomUUID } from "node:crypto"
+import { Order } from "@prisma/client";
 
 export enum iSectors { A = "Problemas com cartão",B="Cartões",C= "Outros assuntos"}
 
@@ -9,9 +9,7 @@ export class User {
     name: string;
     email: string;
     sector: string;
-    is_vendor: boolean;
-
-    treatments_completed ?: UserOrder[] | null
+    is_attendant: boolean;
 
     @Exclude()
     password: string;

@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 
@@ -16,13 +16,12 @@ model User{
   name String
   email String @unique
   password String
-  sector String @default("not vendor")
-  is_vendor Boolean @default(false)
+  sector String @default("not attendant")
+  is_attendant Boolean @default(false)
 
-  orders Order[] @relation("client_order")
-  treatments UserOrder[] @relation("client")
-  treatments_completed UserOrder[] @relation("vendor")
-  
+  customer_services Order[] @relation(name:"customer_service")
+  attendant_services Order[] @relation(name:"attendant_service")
+
   @@map("users")
 }
 
@@ -31,28 +30,13 @@ model Order{
   title String
   description String
   topic String
-  is_activate Boolean @default(true)
+  service_requested Boolean @default(false)
+  start_service DateTime
+  end_service DateTime? 
 
-  client User @relation(name:"client_order",fields: [clientId], references: [id])
-  clientId String
-  userOrder UserOrder? @relation("user_order")
-
+  customer User @relation(name:"customer_service",fields: [customerId], references: [id])
+  customerId String
+  attendant User? @relation(name:"attendant_service",fields: [attendantId], references: [id])
+  attendantId String?
   @@map("orders")
-}
-
-model UserOrder{
-  id String @id
-  start_treatment DateTime
-  end_treatment DateTime? 
-  is_activate Boolean @default(true)
-  topic String
-
-  vendor User @relation(name:"vendor",fields: [vendorId], references: [id])
-  vendorId String 
-  client User @relation(name:"client",fields: [clientId], references: [id])
-  clientId String 
-  order Order @relation("user_order",fields: [orderId], references: [id])
-  orderId String @unique
-
-  @@map("users_orders")
 }
