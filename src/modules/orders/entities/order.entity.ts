@@ -6,6 +6,7 @@ export class Order {
     title : string
     description : string
     topic : string
+    is_activate?: boolean
   
     clientId : string
 

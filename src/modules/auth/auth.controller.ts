@@ -10,7 +10,6 @@ export class AuthController {
   @Post('')
   @UseGuards(LocalAuthGuard)
   async login(@Body() user: LoginDTO) {
-    console.log('aqui')
 
     return this.authService.login(user.email);
   }

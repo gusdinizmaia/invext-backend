@@ -1,3 +1,4 @@
+import { UserOrder } from "src/modules/users_orders/entities/users_order.entity";
 import { Exclude } from "class-transformer";
 import { randomUUID } from "node:crypto"
 
@@ -9,6 +10,8 @@ export class User {
     email: string;
     sector: string;
     is_vendor: boolean;
+
+    treatments_completed ?: UserOrder[] | null
 
     @Exclude()
     password: string;

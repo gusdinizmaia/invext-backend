@@ -31,6 +31,7 @@ model Order{
   title String
   description String
   topic String
+  is_activate Boolean @default(true)
 
   client User @relation(name:"client_order",fields: [clientId], references: [id])
   clientId String
@@ -40,16 +41,18 @@ model Order{
 }
 
 model UserOrder{
+  id String @id
   start_treatment DateTime
-  end_treatment DateTime 
+  end_treatment DateTime? 
+  is_activate Boolean @default(true)
+  topic String
+
   vendor User @relation(name:"vendor",fields: [vendorId], references: [id])
   vendorId String 
   client User @relation(name:"client",fields: [clientId], references: [id])
   clientId String 
   order Order @relation("user_order",fields: [orderId], references: [id])
   orderId String @unique
-  topic String
 
-  @@id([clientId, vendorId, orderId])
   @@map("users_orders")
 }

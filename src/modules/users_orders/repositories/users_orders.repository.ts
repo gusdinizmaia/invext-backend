@@ -4,6 +4,7 @@ import { UserOrder } from "../entities/users_order.entity";
 
 export abstract class UserOrdersRepository{
 
-    abstract requisition(): Promise<UserOrder> | UserOrder;
+    abstract create(createUserOrderDto: CreateUserOrderDto, userId): Promise<UserOrder> | UserOrder;
     abstract finalize(userOrderId : string): Promise<UserOrder> | UserOrder;
+    abstract findById(userOrderId : string): Promise<UserOrder> | UserOrder;
 }
