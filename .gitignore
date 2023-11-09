@@ -2,7 +2,7 @@
 .env
 /dist
 /node_modules
-
+prisma/*.db
 # Logs
 logs
 *.log
